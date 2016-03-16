@@ -1,0 +1,39 @@
+---
+
+- name: configure /etc/security/limits.conf with high max file descriptors (soft/hard)
+  template: src=limits.conf dest=/etc/security/limits.conf mode=0644
+
+- name: create the hosts file for all machines
+  template: src=hosts dest=/etc/hosts backup=yes
+  
+- name: configure /etc/selinux/conf
+  template: src=selinux.conf dest=/etc/selinux/conf backup=yes
+  notify: 
+    - disable selinux
+
+# centos7 stop firewalld
+- name: stop firewalld
+  service: name=firewalld state=stopped
+  when: "{{ansible_distribution_major_version}}==7"
+  notify: 
+    - disable firewalld
+
+# centos6 stop iptables
+- name: stop iptables
+  service: name=iptables state=stopped
+  when: "{{ansible_distribution_major_version}}==6"
+  notify: 
+    - disable iptables
+
+# 在每台主机上都配置相同的该文件
+- name: configure /etc/sysconfig/ntpd
+  template: src=ntpd dest=/etc/sysconfig/ntpd backup=yes
+
+# 在每台机器上都进行配置，该配置在不同的机器上配置会不同
+- name: configure /etc/ntp.conf
+  template: src=ntp.conf dest=/etc/ntp.conf backup=yes
+  notify: 
+    - restart ntpd
+    - chkconfig ntpd on
+
+

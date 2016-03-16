@@ -1,0 +1,44 @@
+---
+
+
+- name: make hbase require dir
+  file: >
+        path={{item}}
+        owner={{hbase.owner}} 
+        group={{hbase.group}} 
+        mode=755 
+        state=directory
+  with_items: 
+        - "{{hbase.hbase_env.hbase_log_dir}}"
+  tags:
+    - config_hbase
+
+- name: config hbase hbase-env.sh
+  template: >
+            src=hbase-env.sh
+            dest={{hbase.install_dir}}/conf/       
+            owner={{hbase.owner}} 
+            group={{hbase.group}}
+            mode=755
+  tags:
+    - config_hbase
+    
+- name: config hbase hbase-site.xml
+  template: >
+            src=hbase-site.xml
+            dest={{hbase.install_dir}}/conf/       
+            owner={{hbase.owner}} 
+            group={{hbase.group}}
+            mode=755
+  tags:
+    - config_hbase 
+    
+- name: config hbase regionservers
+  template: >
+            src=regionservers
+            dest={{hbase.install_dir}}/conf/       
+            owner={{hbase.owner}} 
+            group={{hbase.group}}
+            mode=755
+  tags:
+    - config_hbase       

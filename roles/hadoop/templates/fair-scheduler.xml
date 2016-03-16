@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<allocations>
+  <queue name="default">
+    <minResources>1024 mb, 4 vcores</minResources>
+    <maxResources>92160 mb, 32 vcores</maxResources>
+    <maxRunningApps>40</maxRunningApps>
+    <minSharePreemptionTimeout>300</minSharePreemptionTimeout>
+    <weight>1.0</weight>
+  </queue>
+
+  <queue name="low_queue">
+    <minResources>1024 mb, 4 vcores</minResources>
+    <maxResources>59801 mb, 4 vcores</maxResources>
+    <maxRunningApps>10</maxRunningApps>
+    <minSharePreemptionTimeout>300</minSharePreemptionTimeout>
+    <weight>1.0</weight>
+  </queue>
+
+  <user name="hadoop">
+    <maxRunningApps>40</maxRunningApps>
+  </user>
+  <userMaxAppsDefault>10</userMaxAppsDefault>
+  <fairSharePreemptionTimeout>6000</fairSharePreemptionTimeout>
+</allocations>

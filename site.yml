@@ -1,0 +1,73 @@
+---
+
+# linux系统配置
+- hosts: all
+  user: root
+  sudo: true
+  roles:
+     - system_config
+
+# 安装jdk/hadoop/spark等组件
+- hosts: all
+  user: root
+  sudo: true
+  roles: 
+   - { role: common }
+
+# 配置elasticsearch
+- hosts: elasticsearchs
+  user: root
+  sudo: true
+  roles: 
+     - elasticsearch
+
+# 配置flume     
+- hosts: flumes
+  user: root
+  sudo: true
+  roles:
+     - flume
+   
+# 配置hadoop环境     
+- hosts: hadoop
+  user: root
+  sudo: true
+  roles:
+     - hadoop
+     
+# 配置zookeeper    
+- hosts: zookeepers
+  user: root
+  sudo: true
+  roles:
+     - zookeeper
+
+# 配置hbase   
+- hosts: hbase
+  user: root
+  sudo: true
+  roles:
+     - hbase
+
+# 配置hive     
+- hosts: hives
+  user: root
+  sudo: true
+  roles:
+     - hive
+
+# 配置spark    
+- hosts: spark
+  user: root
+  sudo: true
+  roles:
+     - spark
+
+# 配置sqoop    
+- hosts: sqoops
+  user: root
+  sudo: true
+  roles:
+     - sqoop
+     
+     

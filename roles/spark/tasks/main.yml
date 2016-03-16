@@ -1,0 +1,56 @@
+---
+
+- name: make spark require dir
+  file: >
+        path={{item}}
+        owner={{spark.owner}} 
+        group={{spark.group}} 
+        mode=755 
+        state=directory
+  with_items: 
+        - "{{spark.spark_env.spark_local_dir}}"  
+        - "{{spark.spark_env.spark_worker_dir}}"
+        - "{{spark.spark_env.spark_log_dir}}"
+        - "{{spark.spark_env.spark_pid_dir}}"
+  tags:
+    - config_spark   
+            
+        
+- name: config spark slaves
+  template: >
+            src=slaves
+            dest={{spark.install_dir}}/conf/      
+            owner={{spark.owner}} 
+            group={{spark.group}}
+  tags:
+    - config_spark   
+
+
+- name: config spark spark-defaults.conf
+  template: >
+            src=spark-defaults.conf
+            dest={{spark.install_dir}}/conf/      
+            owner={{spark.owner}} 
+            group={{spark.group}}
+  tags:
+    - config_spark  
+    
+    
+- name: config spark spark-env.sh
+  template: >
+            src=spark-env.sh
+            dest={{spark.install_dir}}/conf/      
+            owner={{spark.owner}} 
+            group={{spark.group}}
+            mode=755
+  tags:
+    - config_spark
+    
+- name: config spark hive-site.xml
+  file: >
+        src={{hive.install_dir}}/conf/hive-site.xml 
+        dest={{spark.install_dir}}/conf/hive-site.xml  
+        state=link
+  tags:
+    - config_spark
+         

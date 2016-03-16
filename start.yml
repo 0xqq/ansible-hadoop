@@ -1,0 +1,89 @@
+---
+
+# 启动zookeeper
+- hosts: zookeepers
+  user: root
+  sudo_user: "{{zookeeper.owner}}"
+  sudo: true
+  tasks:
+    - name: start zookeepers
+      raw: source /etc/profile;zkServer.sh start
+  tags:
+    - start_zookeeper
+    
+# 启动journalnode
+- hosts: journalnodes
+  user: root
+  sudo_user: "{{hadoop.owner}}"         
+  sudo: true
+  tasks:
+    - name: start journalnodes
+      raw: source /etc/profile;hadoop-daemon.sh start journalnode
+  tags:
+    - start_journalnode
+
+# 启动namenode      
+- hosts: namenodes
+  user: root
+  sudo_user: "{{hadoop.owner}}"         
+  sudo: true
+  tasks:
+    - name: start namenodes
+      raw: source /etc/profile;hadoop-daemon.sh start namenode
+  tags:
+    - start_namenode
+      
+# 启动ZKFC      
+- hosts: namenodes
+  user: root
+  sudo_user: "{{hadoop.owner}}"         
+  sudo: true
+  tasks:
+    - name: start ZKFC
+      raw: source /etc/profile;hadoop-daemon.sh start zkfc
+  tags:
+    - start_zkfc
+      
+# 启动datanode
+- hosts: datanodes
+  user: root
+  sudo_user: "{{hadoop.owner}}"         
+  sudo: true
+  tasks:
+    - name: start datanodes
+      raw: source /etc/profile;hadoop-daemon.sh start datanode
+  tags:
+    - start_datanode
+      
+# 启动resourcemanager
+- hosts: resourcemanagers
+  user: root
+  sudo_user: "{{hadoop.owner}}"         
+  sudo: true
+  tasks:
+    - name: start resourcemanagers
+      raw: source /etc/profile;yarn-daemon.sh start resourcemanager
+  tags:
+    - start_resourcemanager
+      
+# 启动nodemanager
+- hosts: nodemanagers
+  user: root
+  sudo_user: "{{hadoop.owner}}"         
+  sudo: true
+  tasks:
+    - name: start nodemanagers
+      raw: source /etc/profile;yarn-daemon.sh start nodemanager
+  tags:
+    - start_nodemanager
+    
+# 启动flume
+# - hosts: flumes
+  # user: root
+  # sudo_user: "{{flume.owner}}"         
+  # sudo: true
+  # tasks:
+    # - name: start flumes
+      # raw: source /etc/profile;
+  # tags:
+    # - start_flume

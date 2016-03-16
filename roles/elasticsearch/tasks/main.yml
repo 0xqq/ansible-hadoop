@@ -1,0 +1,36 @@
+---
+
+- name: make elasticsearch require dir
+  file: >
+        path={{item}}
+        owner={{elasticsearch.owner}} 
+        group={{elasticsearch.group}} 
+        mode=755 
+        state=directory
+  with_items: 
+        - "{{elasticsearch.path_data}}"
+        - "{{elasticsearch.path_logs}}" 
+  tags:
+    - config_elasticsearch 
+
+
+- name: config elasticsearch.yml
+  template: >
+        src=elasticsearch.yml 
+        dest={{elasticsearch.install_dir}}/config/ 
+        owner={{elasticsearch.owner}} 
+        group={{elasticsearch.group}} 
+        mode=755
+  tags: 
+    - config_elasticsearch
+
+    
+- name: config elasticsearch.sh
+  template: >
+        src=elasticsearch 
+        dest={{elasticsearch.install_dir}}/bin/ 
+        owner={{elasticsearch.owner}} 
+        group={{elasticsearch.group}} 
+        mode=755
+  tags: 
+    - config_elasticsearch    

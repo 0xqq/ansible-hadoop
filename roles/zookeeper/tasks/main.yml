@@ -1,0 +1,42 @@
+---
+
+- name: make zookeeper require dir
+  file: >
+        path={{item}}
+        owner={{zookeeper.owner}} 
+        group={{zookeeper.group}} 
+        mode=755 
+        state=directory
+  with_items: 
+        - "{{zookeeper.data_dir}}"
+        - "{{zookeeper.zoo_log_dir}}"
+  tags:
+    - config_zookeeper
+
+- name: config zookeeper zkServer.sh
+  template: >
+            src=zkServer.sh
+            dest={{zookeeper.install_dir}}/bin
+            owner={{zookeeper.owner}} 
+            group={{zookeeper.group}}
+  tags:
+    - config_zookeeper
+    
+- name: config zookeeper zoo.cfg
+  template: >
+            src=zoo.cfg
+            dest={{zookeeper.install_dir}}/conf/zoo.cfg        
+            owner={{zookeeper.owner}} 
+            group={{zookeeper.group}}
+  tags:
+    - config_zookeeper
+            
+- name: create zookeeper myid
+  template: >
+            src=myid
+            dest={{zookeeper.data_dir}}/myid            
+            owner={{zookeeper.owner}} 
+            group={{zookeeper.group}}
+  tags:
+    - config_zookeeper
+            

@@ -1,0 +1,4 @@
+---
+
+- name: test get hostvars
+  template: src=test.tmp dest=/tmp/test.tmp

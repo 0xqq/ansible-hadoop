@@ -1,0 +1,69 @@
+---
+
+- hosts: zookeepers
+  user: root
+  sudo_user: "{{zookeeper.owner}}"
+  sudo: true
+  tasks:
+    - name: start zookeepers
+      raw: source /etc/profile;zkServer.sh start
+    - name: format zookeeper for hdfs
+      raw: source /etc/profile;hdfs zkfc -formatZK -force
+  tags:
+    - init_zookeeper
+
+- hosts: journalnodes
+  user: root
+  sudo_user: "{{hadoop.owner}}"         
+  sudo: true
+  tasks:
+    - name: start journalnodes
+      raw: source /etc/profile;hadoop-daemon.sh start journalnode
+      ignore_errors: True
+  tags:
+    - init_hadoop
+      
+- hosts: namenodes[0]
+  user: root
+  sudo_user: "{{hadoop.owner}}"         
+  sudo: true
+  tasks:
+    - name: format first namenode
+      raw: source /etc/profile;hdfs namenode -format -force
+    - name: init share edits
+      raw: source /etc/profile;hdfs namenode -initializeSharedEdits -force
+    - name: start first namenode
+      raw: source /etc/profile;hadoop-daemon.sh start namenode
+  tags:
+    - init_hadoop      
+      
+- hosts: namenodes[1]
+  user: root
+  sudo_user: "{{hadoop.owner}}"         
+  sudo: true
+  tasks:
+    - name: format seconde namenode
+      raw: source /etc/profile;hdfs namenode -bootstrapStandby
+    - name: start seconde namenode
+      raw: source /etc/profile;hadoop-daemon.sh start namenode
+  tags:
+    - init_hadoop
+    
+- hosts: datanodes
+  user: root
+  sudo_user: "{{hadoop.owner}}"         
+  sudo: true
+  tasks:
+    - name: remove datanode data dir
+      file: >
+        state=absent path={{item}}         
+        owner={{zookeeper.owner}} 
+        group={{zookeeper.group}} 
+        mode=755 
+      with_items:
+        - "{{hadoop.hdfs_site.dfs_data_dir}}"
+  tags:
+    - init_hadoop
+      
+# 初始化完成后，停止所有启动的进程。以免调用启动命令的时候出现进程重复
+- include: stop.yml

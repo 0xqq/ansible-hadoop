@@ -1,0 +1,108 @@
+[all:vars]
+ansible_ssh_user=root 
+ansible_ssh_pass=123456
+ntp_master=False
+
+# FLUME
+# =================
+[flumes]
+node1
+node2
+
+# NTPS
+# 仅需要指定NTP master节点是哪一台主机，为master节点配置上ntp_master=True参数
+# =================
+[ntps]
+node1 ntp_master=True
+
+
+# ZOOKEEPER
+# zookeeper组中的所有的主机需要手动指定额外的参数：myid
+# =================
+[zookeepers]
+node1 myid=1
+node2 myid=2
+
+
+# HADDOP
+# =================
+# 所有主机不是yarn的resourcemanager的时候，ha_id默认都为rm1
+[hadoop:vars]
+ha_id=rm1
+[hadoop:children]
+namenodes
+datanodes
+journalnodes
+resourcemanagers
+nodemanagers
+jobhistorys
+
+[namenodes]
+node1 
+node2
+
+[journalnodes]
+node1
+node2
+
+[datanodes]
+node1
+node2
+
+# resourcemanagers 主机需要指定ha_id分别是rm1或rm2
+[resourcemanagers]
+node1 ha_id=rm1
+node2 ha_id=rm2
+
+[nodemanagers]
+node1
+node2
+
+# 日志节点，只需要指定一个即可
+[jobhistorys]
+node2
+
+# ES
+# =================
+[elasticsearchs:vars]
+
+[elasticsearchs]
+node2 node_master=True node_data=True 
+node1 node_master=True node_data=True
+
+# HBASE
+# =================
+[hbase:children]
+masters
+regionservers
+
+[hmasters]
+node1
+
+[regionservers]
+node1
+node2
+
+# HIVE
+# =================
+[hives]
+node2
+
+# SPARK
+# =================
+[spark:children]
+masters
+works
+
+[masters]
+node1
+node2
+
+[works]
+node1
+node2
+
+# SQOOP
+# =================
+[sqoops]
+node2

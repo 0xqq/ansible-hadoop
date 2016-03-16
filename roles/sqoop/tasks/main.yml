@@ -1,0 +1,20 @@
+---
+
+- name: config sqoop sqoop-site.xml
+  template: >
+            src=sqoop-site.xml
+            dest={{sqoop.install_dir}}/conf/     
+            owner={{sqoop.owner}} 
+            group={{sqoop.group}}
+  tags:
+    - config_sqoop
+    
+- name: config sqoop sqoop-env.sh
+  template: >
+            src=sqoop-env.sh
+            dest={{sqoop.install_dir}}/conf/      
+            owner={{sqoop.owner}} 
+            group={{sqoop.group}}
+            mode=755
+  tags:
+    - config_sqoop

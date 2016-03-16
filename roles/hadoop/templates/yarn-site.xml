@@ -1,0 +1,307 @@
+<?xml version="1.0"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License. See accompanying LICENSE file.
+-->
+
+<configuration>
+
+  <property>
+    <name>yarn.nodemanager.aux-services</name>
+    <value>mapreduce_shuffle,spark_shuffle</value>
+  </property>
+
+  <property>
+    <name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>
+    <value>org.apache.hadoop.mapred.ShuffleHandler</value>
+  </property>
+
+  <property>
+    <name>yarn.nodemanager.aux-services.spark_shuffle.class</name>
+    <value>org.apache.spark.network.yarn.YarnShuffleService</value>
+  </property>
+
+  <property>
+    <name>yarn.nodemanager.local-dirs</name>
+    <value>{{hadoop.yarn_site.yarn_nodemanager_local_dirs}}</value>
+  </property>
+
+  <property>
+    <name>yarn.nodemanager.log-dirs</name>
+    <value>{{hadoop.yarn_site.yarn_nodemanager_log_dirs}}</value>
+  </property>
+
+  <property>
+    <name>yarn.log-aggregation-enable</name>
+    <value>true</value>
+  </property> 
+
+  <property>
+    <description>Where to aggregate logs</description>
+    <name>yarn.nodemanager.remote-app-log-dir</name>
+    <value>{{hadoop.yarn_site.yarn_nodemanager_remote_app_log_dir}}</value>
+  </property>
+
+  <!-- Resource Manager Configs -->
+  <property>
+    <name>yarn.resourcemanager.connect.retry-interval.ms</name>
+    <value>2000</value>
+  </property>
+
+  <property>
+    <name>yarn.resourcemanager.ha.enabled</name>
+    <value>true</value>
+  </property>
+
+  <property>
+    <name>yarn.resourcemanager.ha.automatic-failover.enabled</name>
+    <value>true</value>
+  </property>
+
+  <property>
+    <name>yarn.resourcemanager.ha.automatic-failover.embedded</name>
+    <value>true</value>
+  </property>
+
+  <property>
+    <name>yarn.resourcemanager.cluster-id</name>
+    <value>{{hadoop.yarn_site.yarn_resourcemanager_cluster_id}}</value>
+  </property>
+
+  <property>
+    <name>yarn.resourcemanager.ha.rm-ids</name>
+    <value>rm1,rm2</value>
+  </property>
+
+  <property>
+    <name>yarn.resourcemanager.ha.id</name>
+    <value>{{hostvars[ansible_hostname].ha_id|default(rm1)}}</value>
+  </property>
+
+  <property>
+    <name>yarn.resourcemanager.scheduler.class</name>
+    <value>org.apache.hadoop.yarn.server.resourcemanager.scheduler.fair.FairScheduler</value>
+  </property>
+
+  <property>
+    <name>yarn.resourcemanager.recovery.enabled</name>
+    <value>true</value>
+  </property>
+
+  <property>
+    <name>yarn.resourcemanager.store.class</name>
+    <value>org.apache.hadoop.yarn.server.resourcemanager.recovery.ZKRMStateStore</value>
+  </property>
+
+  <property>
+    <name>yarn.resourcemanager.zk.state-store.address</name>
+    <value>{% for host in groups['zookeepers'] %}{% if not loop.last %}{{host}}:2181,{%else%}{{host}}:2181{% endif %}{% endfor %}</value>
+  </property>
+
+  <property>
+    <name>yarn.app.mapreduce.am.scheduler.connection.wait.interval-ms</name>
+    <value>5000</value>
+  </property>
+
+  <!-- RM1 configs -->
+{% for host in groups['resourcemanagers'] %}
+  <property>
+    <name>yarn.resourcemanager.address.rm{{loop.index}}</name>
+    <value>{{host}}:23140</value>
+  </property>
+
+  <property>
+    <name>yarn.resourcemanager.scheduler.address.rm{{loop.index}}</name>
+    <value>{{host}}:23130</value>
+  </property>
+
+  <property>
+    <name>yarn.resourcemanager.webapp.https.address.rm{{loop.index}}</name>
+    <value>{{host}}:23189</value>
+  </property>
+
+  <property>
+    <name>yarn.resourcemanager.webapp.address.rm{{loop.index}}</name>
+    <value>{{host}}:23188</value>
+  </property>
+
+  <property>
+    <name>yarn.resourcemanager.resource-tracker.address.rm{{loop.index}}</name>
+    <value>{{host}}:23125</value>
+  </property>
+
+  <property>
+    <name>yarn.resourcemanager.admin.address.rm{{loop.index}}</name>
+    <value>{{host}}:23141</value>
+  </property>
+<!-- RM2 configs -->
+{% endfor %}
+
+<!-- Node Manager Configs -->
+  <property>
+    <description>Address where the localizer IPC is.</description>
+    <name>yarn.nodemanager.localizer.address</name>
+    <value>0.0.0.0:23344</value>
+  </property>
+
+  <property>
+    <description>NM Webapp address.</description>
+    <name>yarn.nodemanager.webapp.address</name>
+    <value>0.0.0.0:23999</value>
+  </property>
+
+  <property>
+    <name>mapreduce.shuffle.port</name>
+    <value>23080</value>
+  </property>
+
+  <property>
+    <name>yarn.resourcemanager.zk-address</name>
+    <value>{% for host in groups['zookeepers'] %}{% if not loop.last %}{{host}}:2181,{%else%}{{host}}:2181{% endif %}{% endfor %}</value>
+  </property>
+  
+  <property>
+    <name>yarn.nodemanager.resource.memory-mb</name>
+    <value>{{hadoop.yarn_site.yarn_nodemanager_resource_memory_mb}}</value>
+  </property>
+  
+  <property>
+    <name>yarn.scheduler.minimum-allocation-mb</name>
+    <value>{{hadoop.yarn_site.yarn_scheduler_minimum_allocation_mb}}</value>
+  </property>
+  
+  <property>
+    <name>yarn.nodemanager.resource.cpu-vcores</name>
+    <value>{{hadoop.yarn_site.yarn_nodemanager_resource_cpu_vcores}}</value>
+    <description>number of all the cpu cores</description>
+  </property>
+
+  <property>
+      <description>Address for the Timeline server to start the RPC server.</description>
+      <name>yarn.timeline-service.address</name>
+      <value>{{hadoop.yarn_site.yarn_timeline_service_address}}</value>
+    </property>
+
+    <property>
+      <description>The http address of the Timeline service web application.</description>
+      <name>yarn.timeline-service.webapp.address</name>
+      <value>{{hadoop.yarn_site.yarn_timeline_service_webapp_address}}</value>
+    </property>
+
+    <property>
+      <description>The https address of the Timeline service web application.</description>
+      <name>yarn.timeline-service.webapp.https.address</name>
+      <value>{{hadoop.yarn_site.yarn_timeline_service_webapp_https_address}}</value>
+    </property>
+
+    <property>
+      <description>Handler thread count to serve the client RPC requests.</description>
+      <name>yarn.timeline-service.handler-thread-count</name>
+      <value>20</value>
+    </property>
+
+    <property>
+      <description>Enables cross-origin support (CORS) for web services where
+      cross-origin web response headers are needed. For example, javascript making
+      a web services request to the timeline server.</description>
+      <name>yarn.timeline-service.http-cross-origin.enabled</name>
+      <value>false</value>
+    </property>
+
+    <property>
+      <description>Comma separated list of origins that are allowed for web
+      services needing cross-origin (CORS) support. Wildcards (*) and patterns
+      allowed</description>
+      <name>yarn.timeline-service.http-cross-origin.allowed-origins</name>
+      <value>*</value>
+    </property>
+
+    <property>
+      <description>Comma separated list of methods that are allowed for web
+      services needing cross-origin (CORS) support.</description>
+      <name>yarn.timeline-service.http-cross-origin.allowed-methods</name>
+      <value>GET,POST,HEAD</value>
+    </property>
+
+    <property>
+      <description>Comma separated list of headers that are allowed for web
+      services needing cross-origin (CORS) support.</description>
+      <name>yarn.timeline-service.http-cross-origin.allowed-headers</name>
+      <value>X-Requested-With,Content-Type,Accept,Origin</value>
+    </property>
+
+    <property>
+      <description>The number of seconds a pre-flighted request can be cached
+      for web services needing cross-origin (CORS) support.</description>
+      <name>yarn.timeline-service.http-cross-origin.max-age</name>
+      <value>1800</value>
+    </property>
+    <property>
+      <description>Indicate to ResourceManager as well as clients whether
+      history-service is enabled or not. If enabled, ResourceManager starts
+      recording historical data that Timelien service can consume. Similarly,
+      clients can redirect to the history service when applications
+      finish if this is enabled.</description>
+      <name>yarn.timeline-service.generic-application-history.enabled</name>
+      <value>false</value>
+    </property>
+
+    <property>
+      <description>Store class name for history store, defaulting to file system
+      store</description>
+      <name>yarn.timeline-service.generic-application-history.store-class</name>
+      <value>org.apache.hadoop.yarn.server.applicationhistoryservice.FileSystemApplicationHistoryStore</value>
+    </property>
+    <property>
+      <description>Indicate to clients whether Timeline service is enabled or not.
+      If enabled, the TimelineClient library used by end-users will post entities
+      and events to the Timeline server.</description>
+      <name>yarn.timeline-service.enabled</name>
+      <value>true</value>
+    </property>
+
+    <property>
+      <description>Store class name for timeline store.</description>
+      <name>yarn.timeline-service.store-class</name>
+      <value>org.apache.hadoop.yarn.server.timeline.LeveldbTimelineStore</value>
+    </property>
+
+    <property>
+      <description>Enable age off of timeline store data.</description>
+      <name>yarn.timeline-service.ttl-enable</name>
+      <value>true</value>
+    </property>
+
+    <property>
+      <description>Time to live for timeline store data in milliseconds.</description>
+      <name>yarn.timeline-service.ttl-ms</name>
+      <value>604800000</value>
+    </property>
+    
+    <property>
+      <name>yarn.nodemanager.localizer.client.thread-count</name>
+      <value>20</value>
+    </property>
+
+    <!--当用户通过mapreduce.job.queuename参数指定作业队列启动作业，若该队列不存在，Fair Scheduler默认会自动创建一个该队列。如果设置为false那么将不会创建,使用默认的root.default队列。默认为true  -->
+    <property>
+      <name>yarn.scheduler.fair.allow-undeclared-pools</name>
+      <value>false</value>
+    </property>
+
+    <!--是否用用户名作为默认的队列名。如果设置为false或不设置所有的job共享一个默认的队列"root.default"。默认为true -->
+    <property>
+      <name>yarn.scheduler.fair.user-as-default-queue</name>
+      <value>false</value>
+    </property>
+
+</configuration>

@@ -1,0 +1,6 @@
+<configuration>
+<property>
+  <name>tez.lib.uris</name>
+  <value>{{hadoop.tez_site.tez_lib_uris}}</value>
+</property>
+</configuration>

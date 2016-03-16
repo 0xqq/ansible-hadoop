@@ -1,0 +1,279 @@
+---
+
+- name: add linux group
+  group: name={{item}} state=present
+  with_items:
+        - "{{hadoop.group}}"
+        - "{{jdk.group}}"
+        - "{{scala.group}}"
+        - "{{azkaban.group}}"
+        - "{{elasticsearch.group}}"
+        - "{{flume.group}}"
+        - "{{hbase.group}}"
+        - "{{hive.group}}"
+        - "{{kafka.group}}"
+        - "{{kibana.group}}"
+        - "{{mahout.group}}"
+        - "{{spark.group}}"
+        - "{{sqoop.group}}"
+        - "{{storm.group}}"
+        - "{{tachyon.group}}"
+        - "{{tez.group}}"
+        - "{{zookeeper.group}}"
+  
+- name: add linux user
+  user: >
+        name={{item.name}} 
+        group={{item.group}}
+  with_items:
+        - { name: "{{hadoop.owner}}" , group: "{{hadoop.group}}" }
+        - { name: "{{jdk.owner}}" , group: "{{jdk.group}}" }
+        - { name: "{{scala.owner}}" , group: "{{scala.group}}" }        
+        - { name: "{{azkaban.owner}}" , group: "{{azkaban.group}}" }
+        - { name: "{{elasticsearch.owner}}" , group: "{{elasticsearch.group}}" }
+        - { name: "{{flume.owner}}" , group: "{{flume.group}}" }
+        - { name: "{{hbase.owner}}" , group: "{{hbase.group}}" }
+        - { name: "{{hive.owner}}" , group: "{{hive.group}}" }
+        - { name: "{{kafka.owner}}" , group: "{{kafka.group}}" }
+        - { name: "{{kibana.owner}}" , group: "{{kibana.group}}" }
+        - { name: "{{mahout.owner}}" , group: "{{mahout.group}}" }
+        - { name: "{{spark.owner}}" , group: "{{spark.group}}" }
+        - { name: "{{sqoop.owner}}" , group: "{{sqoop.group}}" }
+        - { name: "{{storm.owner}}" , group: "{{storm.group}}" }
+        - { name: "{{tachyon.owner}}" , group: "{{tachyon.group}}" }
+        - { name: "{{tez.owner}}" , group: "{{tez.group}}" }
+        - { name: "{{zookeeper.owner}}" , group: "{{zookeeper.group}}" }
+
+  
+# password=$1$yz6Mn8KG$NccQPDV8AIZXD1nncfccp1 # openssl passwd -1 
+
+- name: make other require dir
+  file: >
+        path={{item}}
+        owner={{root_dir_owner}} 
+        group={{root_dir_group}} 
+        mode=755 
+        state=directory
+  with_items: 
+        - "{{install_pkg_dir}}"
+        - "{{log_dir}}"
+        - "{{metadata_dir}}"
+        - "{{config_dir}}"
+
+- name: deploy jdk
+  sudo: true
+  sudo_user: "{{jdk.owner}}"
+  unarchive: >
+        src={{local_src_root_dir}}/{{jdk.src_pkg_name}} 
+        dest={{install_pkg_dir}}
+        owner={{jdk.owner}} 
+        group={{jdk.group}} 
+        mode=755
+  tags: 
+    - deploy_jdk        
+
+- name: deploy azkaban
+  sudo: true
+  sudo_user: "{{azkaban.owner}}"
+  unarchive: >
+        src={{local_src_root_dir}}/{{azkaban.src_pkg_name}} 
+        dest={{install_pkg_dir}}
+        owner={{azkaban.owner}} 
+        group={{azkaban.group}} 
+        mode=755
+  tags: 
+    - deploy_azkaban    
+    
+- name: deploy hadoop
+  sudo: true
+  sudo_user: "{{hadoop.owner}}"
+  unarchive: >
+        src={{local_src_root_dir}}/{{hadoop.src_pkg_name}} 
+        dest={{install_pkg_dir}}
+        owner={{hadoop.owner}} 
+        group={{hadoop.group}} 
+        mode=755
+  tags: 
+    - deploy_hadoop
+
+- name: deploy elasticsearch
+  sudo: true
+  sudo_user: "{{elasticsearch.owner}}"
+  unarchive: >
+        src={{local_src_root_dir}}/{{elasticsearch.src_pkg_name}} 
+        dest={{install_pkg_dir}}
+        owner={{elasticsearch.owner}} 
+        group={{elasticsearch.group}} 
+        mode=755
+  tags: 
+    - deploy_elasticsearch
+
+- name: deploy flume
+  sudo: true
+  sudo_user: "{{flume.owner}}"
+  unarchive: >
+        src={{local_src_root_dir}}/{{flume.src_pkg_name}}  
+        dest={{install_pkg_dir}}
+        owner={{flume.owner}} 
+        group={{flume.group}} 
+        mode=755
+  tags: 
+    - deploy_flume
+
+- name: deploy hbase
+  sudo: true
+  sudo_user: "{{hbase.owner}}"
+  unarchive: >
+        src={{local_src_root_dir}}/{{hbase.src_pkg_name}}   
+        dest={{install_pkg_dir}}
+        owner={{hbase.owner}} 
+        group={{hbase.group}} 
+        mode=755
+  tags: 
+    - deploy_hbase
+
+- name: deploy hive
+  sudo: true
+  sudo_user: "{{hive.owner}}"
+  unarchive: >
+        src={{local_src_root_dir}}/{{hive.src_pkg_name}} 
+        dest={{install_pkg_dir}}
+        owner={{hive.owner}} 
+        group={{hive.group}} 
+        mode=755
+  tags: 
+    - deploy_hive
+
+- name: deploy kafka
+  sudo: true
+  sudo_user: "{{kafka.owner}}"
+  unarchive: >
+        src={{local_src_root_dir}}/{{kafka.src_pkg_name}}  
+        dest={{install_pkg_dir}}
+        owner={{kafka.owner}} 
+        group={{kafka.group}} 
+        mode=755
+  tags: 
+    - deploy_kafka
+
+- name: deploy kibana
+  sudo: true
+  sudo_user: "{{kibana.owner}}"
+  unarchive: >
+        src={{local_src_root_dir}}/{{kibana.src_pkg_name}}   
+        dest={{install_pkg_dir}}
+        owner={{kibana.owner}} 
+        group={{kibana.group}} 
+        mode=755
+  tags: 
+    - deploy_kibana
+
+- name: deploy mahout
+  sudo: true
+  sudo_user: "{{mahout.owner}}"
+  unarchive: >
+        src={{local_src_root_dir}}/{{mahout.src_pkg_name}}
+        dest={{install_pkg_dir}}
+        owner={{mahout.owner}} 
+        group={{mahout.group}} 
+        mode=755
+  tags: 
+    - deploy_mahout
+
+- name: deploy scala
+  sudo: true
+  sudo_user: "{{scala.owner}}"
+  unarchive: >
+        src={{local_src_root_dir}}/{{scala.src_pkg_name}} 
+        dest={{install_pkg_dir}}
+        owner={{scala.owner}} 
+        group={{scala.group}} 
+        mode=755
+  tags: 
+    - deploy_scala
+
+- name: deploy spark
+  sudo: true
+  sudo_user: "{{spark.owner}}"
+  unarchive: >
+        src={{local_src_root_dir}}/{{spark.src_pkg_name}} 
+        dest={{install_pkg_dir}}
+        owner={{spark.owner}} 
+        group={{spark.group}} 
+        mode=755
+  tags: 
+    - deploy_spark    
+
+- name: deploy sqoop
+  sudo: true
+  sudo_user: "{{sqoop.owner}}"
+  unarchive: >
+        src={{local_src_root_dir}}/{{sqoop.src_pkg_name}} 
+        dest={{install_pkg_dir}}
+        owner={{sqoop.owner}} 
+        group={{sqoop.group}} 
+        mode=755
+  tags: 
+    - deploy_sqoop   
+
+- name: deploy storm
+  sudo: true
+  sudo_user: "{{storm.owner}}"
+  unarchive: >
+        src={{local_src_root_dir}}/{{storm.src_pkg_name}} 
+        dest={{install_pkg_dir}}
+        owner={{storm.owner}} 
+        group={{storm.group}} 
+        mode=755
+  tags: 
+    - deploy_storm
+    
+- name: deploy tachyon
+  sudo: true
+  sudo_user: "{{tachyon.owner}}"
+  unarchive: >
+        src={{local_src_root_dir}}/{{tachyon.src_pkg_name}} 
+        dest={{install_pkg_dir}}
+        owner={{tachyon.owner}} 
+        group={{tachyon.group}} 
+        mode=755
+  tags: 
+    - deploy_tachyon
+
+- name: deploy tez
+  sudo: true
+  sudo_user: "{{tez.owner}}"
+  unarchive: >
+        src={{local_src_root_dir}}/{{tez.src_pkg_name}} 
+        dest={{install_pkg_dir}}
+        owner={{tez.owner}} 
+        group={{tez.group}} 
+        mode=755
+  tags: 
+    - deploy_tez
+    
+- name: deploy zookeeper
+  sudo: true
+  sudo_user: "{{zookeeper.owner}}"
+  unarchive: >
+        src={{local_src_root_dir}}/{{zookeeper.src_pkg_name}} 
+        dest={{install_pkg_dir}}
+        owner={{zookeeper.owner}} 
+        group={{zookeeper.group}} 
+        mode=755
+  tags: 
+    - deploy_zookeeper
+
+# config environment variable
+- name: config environment variable
+  template: >
+        src=csh_env.sh
+        dest=/etc/profile.d/csh_env.sh
+        mode=755
+  tags:
+    - config_env
+    
+- name: source /etc/profile
+  raw: source /etc/profile
+  tags:
+    - config_env

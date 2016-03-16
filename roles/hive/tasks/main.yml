@@ -1,0 +1,10 @@
+---
+
+- name: config hive hive-site.xml
+  template: >
+            src=hive-site.xml
+            dest={{hive.install_dir}}/conf/hive-site.xml       
+            owner={{hive.owner}} 
+            group={{hive.group}}
+  tags:
+    - config_hive

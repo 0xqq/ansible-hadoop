@@ -1,0 +1,144 @@
+---
+
+- name: make hadoop require dir
+  file: >
+        path={{item}}
+        owner={{hadoop.owner}} 
+        group={{hadoop.group}} 
+        mode=755 
+        state=directory
+  with_items:
+        - "{{metadata_dir}}/tmp"
+        - "{{hadoop.core_site.hadoop_tmp_dir}}"
+        - "{{hadoop.yarn_site.yarn_nodemanager_local_dirs}}"
+        - "{{hadoop.yarn_site.yarn_nodemanager_log_dirs}}"
+        - "{{hadoop.yarn_env.yarn_log_dir}}"
+        - "{{hadoop.mapred_site.yarn_app_mapreduce_am_staging_dir}}"
+        - "{{hadoop.hdfs_site.dfs_data_dir}}"
+        - "{{hadoop.hdfs_site.dfs_journalnode_edits_dir}}"
+        - "{{hadoop.hadoop_env.hadoop_log_dir}}"
+
+  tags:
+    - config_hadoop 
+    
+    
+- name: config hadoop core-site.xml
+  template: >
+        src=core-site.xml 
+        dest={{hadoop.install_dir}}/etc/hadoop
+        owner={{hadoop.owner}} 
+        group={{hadoop.group}} 
+        mode=755
+  tags: 
+    - config_hadoop 
+    
+- name: config hadoop hdfs-site.xml
+  template: >
+        src=hdfs-site.xml 
+        dest={{hadoop.install_dir}}/etc/hadoop
+        owner={{hadoop.owner}} 
+        group={{hadoop.group}} 
+        mode=755
+  tags: 
+    - config_hadoop 
+
+- name: config hadoop hadoop-env.sh
+  template: >
+        src=hadoop-env.sh 
+        dest={{hadoop.install_dir}}/etc/hadoop
+        owner={{hadoop.owner}} 
+        group={{hadoop.group}} 
+        mode=755
+  tags: 
+    - config_hadoop 
+    
+- name: config hadoop hadoop-metrics2.properties
+  template: >
+        src=hadoop-metrics2.properties
+        dest={{hadoop.install_dir}}/etc/hadoop
+        owner={{hadoop.owner}} 
+        group={{hadoop.group}} 
+        mode=755
+  tags: 
+    - config_hadoop 
+    
+- name: config hadoop httpfs-site.xml
+  template: >
+        src=httpfs-site.xml
+        dest={{hadoop.install_dir}}/etc/hadoop
+        owner={{hadoop.owner}} 
+        group={{hadoop.group}} 
+        mode=755
+  tags: 
+    - config_hadoop
+
+- name: config hadoop mapred-site.xml
+  template: >
+        src=mapred-site.xml
+        dest={{hadoop.install_dir}}/etc/hadoop
+        owner={{hadoop.owner}} 
+        group={{hadoop.group}} 
+        mode=755
+  tags: 
+    - config_hadoop
+
+- name: config hadoop slaves
+  template: >
+        src=slaves
+        dest={{hadoop.install_dir}}/etc/hadoop
+        owner={{hadoop.owner}} 
+        group={{hadoop.group}} 
+        mode=755
+  tags: 
+    - config_hadoop
+
+- name: config hadoop slaves-excluded
+  template: >
+        src=slaves-excluded
+        dest={{hadoop.install_dir}}/etc/hadoop
+        owner={{hadoop.owner}} 
+        group={{hadoop.group}} 
+        mode=755
+  tags: 
+    - config_hadoop    
+    
+- name: config hadoop tez-site.xml
+  template: >
+        src=tez-site.xml
+        dest={{hadoop.install_dir}}/etc/hadoop
+        owner={{hadoop.owner}} 
+        group={{hadoop.group}} 
+        mode=755
+  tags: 
+    - config_hadoop   
+
+- name: config hadoop yarn-env.sh
+  template: >
+        src=yarn-env.sh
+        dest={{hadoop.install_dir}}/etc/hadoop
+        owner={{hadoop.owner}} 
+        group={{hadoop.group}} 
+        mode=755
+  tags: 
+    - config_hadoop
+
+- name: config hadoop yarn-site.xml
+  template: >
+        src=yarn-site.xml
+        dest={{hadoop.install_dir}}/etc/hadoop
+        owner={{hadoop.owner}} 
+        group={{hadoop.group}} 
+        mode=755
+  tags: 
+    - config_hadoop
+
+- name: config hadoop fair-scheduler.xml
+  template: >
+        src=fair-scheduler.xml
+        dest={{hadoop.install_dir}}/etc/hadoop
+        owner={{hadoop.owner}} 
+        group={{hadoop.group}} 
+        mode=755
+  tags: 
+    - config_hadoop
+

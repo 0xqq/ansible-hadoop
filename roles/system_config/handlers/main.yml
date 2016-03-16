@@ -1,0 +1,17 @@
+---
+
+- name: restart ntpd
+  service: name=ntpd state=restarted
+
+- name: chkconfig ntpd on
+  command: chkconfig ntpd on
+
+- name: disable selinux
+  command: setenforce 0  
+  
+- name: disable firewalld
+  command: systemctl disable firewalld
+  
+- name: disable iptables
+  command: chkconfig iptables off
+  

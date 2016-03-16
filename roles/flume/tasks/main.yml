@@ -1,0 +1,32 @@
+---
+
+- name: make flume require dir
+  file: >
+        path={{item}}
+        owner={{flume.owner}} 
+        group={{flume.group}} 
+        mode=755 
+        state=directory
+  with_items: 
+        - "{{flume.log_dir}}"
+  tags:
+    - config_flume        
+        
+- name: config flume flume-csh.conf
+  template: >
+            src=flume-csh.conf
+            dest={{flume.install_dir}}/conf/        
+            owner={{flume.owner}} 
+            group={{flume.group}}
+  tags:
+    - config_flume
+    
+- name: config flume flume-env.sh
+  template: >
+            src=flume-env.sh
+            dest={{flume.install_dir}}/conf/        
+            owner={{flume.owner}}
+            group={{flume.group}}
+            mode=755
+  tags:
+    - config_flume    

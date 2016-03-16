@@ -1,0 +1,6 @@
+
+{{ansible_hostname}}
+is_master:{{hostvars.node2.is_master}}
+
+
+

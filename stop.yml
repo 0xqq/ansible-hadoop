@@ -1,0 +1,86 @@
+---
+
+# kill zookeeper
+- hosts: zookeepers
+  user: root
+  sudo_user: "{{zookeeper.owner}}"
+  sudo: true
+  tasks:
+    - name: kill zookeepers
+      raw: source /etc/profile;jps|grep -i QuorumPeerMain |awk '{print $1}'|xargs kill
+      ignore_errors: True
+  tags:
+    - stop_zookeeper
+    
+# kill journalnode
+- hosts: journalnodes
+  user: root
+  sudo_user: "{{hadoop.owner}}"         
+  sudo: true
+  tasks:
+    - name: kill journalnodes
+      raw: source /etc/profile;jps|grep -i JournalNode |awk '{print $1}'|xargs kill
+      ignore_errors: True
+  tags:
+    - stop_journalnode      
+
+# kill namenode      
+- hosts: namenodes
+  user: root
+  sudo_user: "{{hadoop.owner}}"         
+  sudo: true
+  tasks:
+    - name: kill namenodes
+      raw: source /etc/profile;jps|grep -i NameNode |awk '{print $1}'|xargs kill 
+      ignore_errors: True
+  tags:
+    - stop_namenode       
+      
+# kill ZKFC      
+- hosts: namenodes
+  user: root
+  sudo_user: "{{hadoop.owner}}"         
+  sudo: true
+  tasks:
+    - name: kill ZKFC
+      raw: source /etc/profile;jps|grep -i DFSZKFailoverController |awk '{print $1}'|xargs kill
+      ignore_errors: True
+  tags:
+    - stop_zkfc
+      
+# kill datanode
+- hosts: datanodes
+  user: root
+  sudo_user: "{{hadoop.owner}}"         
+  sudo: true
+  tasks:
+    - name: kill datanodes
+      raw: source /etc/profile;jps|grep -i DataNode |awk '{print $1}'|xargs kill 
+      ignore_errors: True
+  tags:
+    - stop_datanode
+      
+# kill resourcemanager
+- hosts: resourcemanagers
+  user: root
+  sudo_user: "{{hadoop.owner}}"         
+  sudo: true
+  tasks:
+    - name: kill resourcemanagers
+      raw: source /etc/profile;jps|grep -i ResourceManager |awk '{print $1}'|xargs kill  
+      ignore_errors: True
+  tags:
+    - stop_resourcemanager
+      
+# kill nodemanager
+- hosts: nodemanagers
+  user: root
+  sudo_user: "{{hadoop.owner}}"
+  sudo: true
+  tasks:
+    - name: kill nodemanagers
+      raw: source /etc/profile;jps|grep -i NodeManager |awk '{print $1}'|xargs kill 
+      ignore_errors: True
+  tags:
+    - stop_nodemanager
+

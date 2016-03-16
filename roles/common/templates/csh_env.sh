@@ -1,0 +1,21 @@
+export CSH_HOME={{install_root_dir}}
+export JAVA_HOME={{jdk.install_dir}}
+export SCALA_HOME={{scala.install_dir}}
+export HBASE_HOME={{hbase.install_dir}}
+export HIVE_HOME={{hive.install_dir}}
+export HADOOP_HOME={{hadoop.install_dir}}
+export HADOOP_COMMON_HOME={{hadoop.install_dir}}
+export HADOOP_MAPRED_HOME={{hadoop.install_dir}}
+export SQOOP_HOME={{sqoop.install_dir}}
+export ZOOKEEPER_HOME={{zookeeper.install_dir}}
+export LD_LIBRARY_PATH={{hadoop.install_dir}}/lib/native
+export SPARK_HOME={{spark.install_dir}}
+export FLUME_HOME={{flume.install_dir}}
+export FLUME_CONF_DIR={{flume.install_dir}}/conf
+export TACHYON_HOME={{tachyon.install_dir}}
+export ELASTIC_HOME={{elasticsearch.install_dir}}
+export STORM_HOME={{storm.install_dir}}
+export CLASSPATH=.:$JAVA_HOME/lib:$JAVA_HOME/jre/lib:$SQOOP_HOME/lib:$SPARK_HOME/lib:$ELASTIC_HOME/lib:$CLASSPATH
+export PATH=$ZOOKEEPER_HOME/bin:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$JAVA_HOME/bin:$SCALA_HOME/bin:$JAVA_HOME/jre/bin:$HBASE_HOME/bin:$HIVE_HOME/bin:$SQOOP_HOME/bin:$SPARK_HOME/bin:$FLUME_HOME/bin:$TACHYON_HOME/bin:$STORM_HOME/bin:$CSH_HOME/sbin:$PATH
+
+export PUB_KEY_HOME=/home/hadoop/.ssh/id_rsa
